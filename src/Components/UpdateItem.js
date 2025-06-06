@@ -21,7 +21,7 @@ const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,open
         description,
         price,
         rating,
-        isNew,
+        isNew: isNew??false,
         imgPath,
     });
     console.log(openUpdateModal)
@@ -98,7 +98,7 @@ const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,open
             </Form.Item>
             <Form.Item label="New Product: " valuePropName="checked">
                 <Switch
-                    // checked={isNew}
+                    checked={formData.isNew}
                     onChange={checked => handleChange('isNew', checked)} />
             </Form.Item>
             <Form.Item label="Image Link">

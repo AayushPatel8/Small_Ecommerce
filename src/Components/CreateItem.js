@@ -1,5 +1,4 @@
-import React, { useState,useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import { useState,useEffect } from 'react';
 import {
     Button,
     Form,
@@ -20,7 +19,7 @@ const CreateItem = ({openCreateModal,reset}) => {
         price: 0,
         rating: 0,
         imgPath:'',
-        isNew: false
+        isNew: true
     }
 
     const dispatch = useDispatch();
