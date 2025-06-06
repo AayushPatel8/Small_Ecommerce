@@ -1,38 +1,90 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(249 250 251);
+  color: black;
+  overflow-x: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.delete {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  /* border-color: #ff4d4f; */
+  color: #ff4d4f;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 20%;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(255,77,79,0.15);
+  border: 2px solid #ff4d4f;
+  font-size: 18px;
+  padding: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.delete:hover {
+  background: #ff4d4f;
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255,77,79,0.25);
+  transform: scale(1.08);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.update {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background: rgb(12 75 204); */
+  color: rgb(12 75 204);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 20%;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(255,77,79,0.15);
+  border: 2px solid rgb(12 75 204);
+  font-size: 18px;
+  padding: 0;
+}
+
+.update:hover {
+  background: rgb(12 75 204);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255,77,79,0.25);
+  transform: scale(1.08);
+}
+
+.customToolbar{
+  color: #040d1e;
+  font-weight: 700;
+  /* padding-top: 1rem; */
+  /* padding-bottom: 1rem; */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.MuiButton-root {
+  color: rgb(75 85 99) !important; /* For nav buttons */
+  font-size: 15px!important;
+  font-weight: 500!important;
+}
+
+.notfound {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  width: full;
+  height: full;
+  font-size: 50px;
+  color: #888888;
 }
