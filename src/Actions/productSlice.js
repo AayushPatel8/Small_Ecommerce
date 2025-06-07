@@ -30,9 +30,14 @@ const productSlice = createSlice({
     initialState: {
         loading: false,
         data:[],
-        error:null
+        error:null,
+        auth: false
     },
-    reducers: {},
+    reducers: {
+        setAuth: (state, action) => {
+            state.auth = action.payload;
+        }
+    },
     extraReducers:(builder)=>{
         builder
             .addCase(fetchProducts.pending,(state)=>{
@@ -52,3 +57,4 @@ const productSlice = createSlice({
 
 
 export default productSlice.reducer;
+export const { setAuth } = productSlice.actions;

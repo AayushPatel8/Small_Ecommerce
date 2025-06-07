@@ -5,6 +5,9 @@ import ProductsGrid from './Components/ProductsGrid';
 import { Content } from 'antd/es/layout/layout';
 import { Breadcrumb, Layout, Menu, theme, Space } from 'antd';
 import Searchbar from './Components/Searchbar';
+import SignIn from './Components/Signin/SigninPage';
+import SignUp from './Components/Signup/SignupPage';
+import MainContainer from './Components/MainContainer';
 /*https://preview.themeforest.net/item/timzee-watch-sectioned-shopify-theme/full_screen_preview/24140753*/
 
 
@@ -15,7 +18,10 @@ function App() {
   } = theme.useToken();
   return (
     <div className="App">
-      <NavigationBar />
+      <MainContainer />
+      {/* <SignUp /> */}
+      {/* <SignIn /> */}
+      {/* <NavigationBar />
       <Content style={{ padding: '0 48px' }}>
         <Space direction='horizontal' style={{display:'flex', justifyContent:'space-between'}}>
           <Breadcrumb
@@ -33,9 +39,8 @@ function App() {
           }}
         >
           <ProductsGrid />
-          {/* <CardElement imgPath={"https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-ferarcosn-190819.jpg&fm=jpg"} title={"Titan"} description={"Premium Watch"} price={8789} /> */}
         </div>
-      </Content>
+      </Content> */}
 
 
     </div>

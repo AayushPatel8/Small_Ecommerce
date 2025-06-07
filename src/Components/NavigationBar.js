@@ -15,15 +15,20 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Modal } from 'antd';
 import CreateItem from './CreateItem';
+import { useDispatch } from 'react-redux';
+import { setAuth } from '../Actions/productSlice';
+import  logOut  from '../Firebase/signout';
 
 const pages = ['Products', 'Pricing', 'Cart', 'Add Product'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 
 function NavigationBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [modal, contextHolder] = Modal.useModal();
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -150,7 +155,7 @@ function NavigationBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={()=>{setting==='Logout'?logOut(dispatch):handleCloseUserMenu()}}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}
