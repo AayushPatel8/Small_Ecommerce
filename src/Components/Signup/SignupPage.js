@@ -20,8 +20,11 @@ import Logo from '../Logo';
 import signup from '../../Firebase/signup';
 import { Modal } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { setAuth } from "../../Actions/productSlice";
+import { setAuth, setNewUser } from "../../Actions/productSlice";
 import { googleSignin } from '../../Firebase/signin';
+import { addUser, getUser } from "../../Firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -74,11 +77,19 @@ export default function SignUp(props) {
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [modal, contextHolder] = Modal.useModal();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const [userData, setUserData] = React.useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    memberSince: ''
+  })
 
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    const name = document.getElementById('name');
+    const firstname = document.getElementById('firstname');
+    const lastname = document.getElementById('lastname');
 
     let isValid = true;
 
@@ -100,7 +111,7 @@ export default function SignUp(props) {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
+    if (!firstname.value || firstname.value.length < 1 || !lastname.value || lastname.value.length < 1) {
       setNameError(true);
       setNameErrorMessage('Name is required.');
       isValid = false;
@@ -112,15 +123,24 @@ export default function SignUp(props) {
     return isValid;
   };
 
-  const signupEvent = async()=>{
+  const signupEvent = async () => {
     let val = validateInputs();
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    
+
     if (val) {
       try {
+        const now = new Date();
+        const memberSince = now.toLocaleString('default', { month: 'long', year: 'numeric' })
+        const userDataWithMemberSince = {
+          ...userData,
+          memberSince
+        };
         await signup(email.value, password.value);
+        await addUser(userDataWithMemberSince);
         dispatch(setAuth(true));
+        dispatch(setNewUser(true));
+        navigate('/profile')
       } catch (error) {
         console.log('Sign-in error:', error);
         countDown();
@@ -161,7 +181,12 @@ export default function SignUp(props) {
   };
 
 
-
+  const handleChange = (field, value) => {
+    setUserData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -182,20 +207,41 @@ export default function SignUp(props) {
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
-            <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
-              <TextField
-                autoComplete="name"
-                name="name"
-                required
-                fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
-              />
-            </FormControl>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+              <FormControl sx={{ flex: 1 }}>
+                <FormLabel htmlFor="name">First name</FormLabel>
+                <TextField
+                  autoComplete="firstname"
+                  name="firstname"
+                  required
+                  fullWidth
+                  id="firstname"
+                  placeholder="Jon"
+                  error={nameError}
+                  helperText={nameErrorMessage}
+                  color={nameError ? 'error' : 'primary'}
+                  value={userData.firstName}
+                  onChange={(e) => handleChange('firstName', e.target.value)}
+                />
+              </FormControl>
+              <FormControl sx={{ flex: 1 }}>
+                <FormLabel htmlFor="name">Last name</FormLabel>
+                <TextField
+                  autoComplete="lastname"
+                  name="lastname"
+                  required
+                  fullWidth
+                  id="lastname"
+                  placeholder="Snow"
+                  error={nameError}
+                  helperText={nameErrorMessage}
+                  color={nameError ? 'error' : 'primary'}
+                  value={userData.lastName}
+                  onChange={(e) => handleChange('lastName', e.target.value)}
+                />
+
+              </FormControl>
+            </Box>
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
@@ -209,6 +255,8 @@ export default function SignUp(props) {
                 error={emailError}
                 helperText={emailErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
+                value={userData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
               />
             </FormControl>
             <FormControl>
@@ -266,7 +314,7 @@ export default function SignUp(props) {
               <Link
                 component='button'
                 type='button'
-                onClick={()=>props.setAuthPage('signin')}
+                onClick={() => navigate('/signin')}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >

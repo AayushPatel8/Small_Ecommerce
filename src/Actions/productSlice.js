@@ -1,5 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { deleteProduct, getProducts, updateProducts, createProduct } from '../API/products';
+import { useId } from 'react';
 
 
 //Thunks (async Functions)
@@ -25,17 +26,26 @@ export const createNewProduct = createAsyncThunk('products/createProduct',async(
     return thunkAPI.dispatch(fetchProducts());
 })
 
+
 const productSlice = createSlice({
     name: 'products',
     initialState: {
         loading: false,
         data:[],
         error:null,
-        auth: false
+        auth: false,
+        profilePicture:'',
+        newUser: false
     },
     reducers: {
         setAuth: (state, action) => {
             state.auth = action.payload;
+        },
+        setProfilePicture: (state,action)=>{
+            state.profilePicture = action.payload;
+        },
+        setNewUser: (state,action)=>{
+            state.newUser = action.payload;
         }
     },
     extraReducers:(builder)=>{
@@ -57,4 +67,4 @@ const productSlice = createSlice({
 
 
 export default productSlice.reducer;
-export const { setAuth } = productSlice.actions;
+export const { setAuth, setProfilePicture, setNewUser } = productSlice.actions;

@@ -1,18 +1,16 @@
 import { Button, Card, Space, Modal,Rate,Typography } from 'antd';
-import { PicCenterOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 import Counter from './Counter';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import UpdateItem from './UpdateItem';
-import { deleteProduct } from '../API/products';
-import { delProduct, fetchProducts } from '../Actions/productSlice';
-import { useDispatch } from 'react-redux';
+import { useDeleteProduct } from '../react-query/useProductMutations';
 
 const { Meta } = Card;
 
 
 const CardElement = ({ imgPath, title, description, price, id, rating, isNew }) => {
-    const dispatch = useDispatch();
+    const {mutate:deleteProduct, isLoading} = useDeleteProduct();
     const [showCounter, setShowCounter] = useState(false);
     const [modal, contextHolder] = Modal.useModal();
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -26,8 +24,7 @@ const CardElement = ({ imgPath, title, description, price, id, rating, isNew }) 
             okText: 'Delete',
             cancelText: 'Cancel',
             onOk: () => {
-                dispatch(delProduct(id));
-                dispatch(fetchProducts());
+                deleteProduct(id);
             }
         });
     };

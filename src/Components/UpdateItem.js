@@ -1,5 +1,4 @@
-import React, { useState,useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import { useState,useEffect } from 'react';
 import {
     Button,
     Form,
@@ -9,13 +8,10 @@ import {
     Switch,
     Image,
 } from 'antd';
-import { getProducts, updateProducts } from '../API/products';
-import { useDispatch } from 'react-redux';
-import { fetchProducts, updateProduct } from '../Actions/productSlice';
+import { useUpdateProduct } from '../react-query/useProductMutations';
 
 const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,openUpdateModal, reset }) => {
-    
-    const dispatch = useDispatch();
+    const {mutate: updateProduct, isLoading } = useUpdateProduct();
     const [formData, setFormData] = useState({
         title,
         description,
@@ -24,9 +20,9 @@ const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,open
         isNew: isNew??false,
         imgPath,
     });
-    console.log(openUpdateModal)
+    
     useEffect(() => {
-        console.log(openUpdateModal);
+        
         setFormData({
             title,
             description,
@@ -61,7 +57,8 @@ const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,open
         console.log('Updated Data:', updatedProduct);
 
         try {
-            dispatch(updateProduct(updatedProduct));
+            // dispatch(updateProduct(updatedProduct));
+            updateProduct(updatedProduct);
             reset(false);
         } catch(error) {
             console.error("Update failed:",error);
@@ -115,7 +112,7 @@ const UpdateItem = ({ title, imgPath, description, price, id, rating, isNew,open
                 />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-                <Button type="primary" htmlType="Update">
+                <Button type="primary" htmlType="Update" loading={isLoading}>
                     Submit
                 </Button>
             </Form.Item>

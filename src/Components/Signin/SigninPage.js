@@ -21,8 +21,10 @@ import Logo from '../Logo';
 import signin from '../../Firebase/signin';
 import { Modal } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
-import { setAuth } from "../../Actions/productSlice";
+import { setAuth, setNewUser } from "../../Actions/productSlice";
 import { googleSignin } from '../../Firebase/signin';
+import { useNavigate } from 'react-router-dom';
+import { getUser } from '../../Firebase/firestore';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -74,6 +76,7 @@ export default function SignIn(props) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
@@ -122,6 +125,19 @@ export default function SignIn(props) {
     return isValid;
   };
 
+  const validateData = async()=>{
+    const userData = await getUser();
+    if(userData.firstName=='' || 
+      userData.middleName=='' ||
+      userData.lastName=='' ||
+      userData.dateOfBirth==null||
+      userData.country==''||
+      userData.mobileNo==''
+    ){return false;}
+    return true;
+    
+  }
+
   const signinEvent = async () => {
     let val = validateInputs();
     const email = document.getElementById('email');
@@ -131,6 +147,10 @@ export default function SignIn(props) {
       try {
         await signin(email.value, password.value);
         dispatch(setAuth(true));
+        const isProfileComplete = await validateData();
+        dispatch(setNewUser(!isProfileComplete));
+        if(isProfileComplete) navigate('/')
+        else navigate('/profile');
       } catch (error) {
         // console.log('Sign-in error:', error);
         countDown();
@@ -263,7 +283,7 @@ export default function SignIn(props) {
               <Link
                 component='button'
                 type='button'
-                onClick={() => props.setAuthPage('signup')}
+                onClick={() => navigate('/signup')}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >

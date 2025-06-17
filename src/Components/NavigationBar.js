@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
@@ -18,6 +18,10 @@ import CreateItem from './CreateItem';
 import { useDispatch } from 'react-redux';
 import { setAuth } from '../Actions/productSlice';
 import  logOut  from '../Firebase/signout';
+import { useNavigate } from 'react-router-dom';
+import { UserOutlined, EditOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { Avatar } from 'antd';
 
 const pages = ['Products', 'Pricing', 'Cart', 'Add Product'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -29,6 +33,8 @@ function NavigationBar() {
   const [modal, contextHolder] = Modal.useModal();
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const profilePicture = useSelector(state => state.products.profilePicture);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -125,7 +131,9 @@ function NavigationBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={()=>{if(page==='Add Product') setOpenCreateModal(true)}}
+                onClick={()=>{if(page==='Add Product') setOpenCreateModal(true)
+                  if(page==='Products') navigate('/');
+                }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -135,7 +143,8 @@ function NavigationBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Prime_Minister_of_India_Narendra_Modi.jpg/960px-Prime_Minister_of_India_Narendra_Modi.jpg" />
+                <Avatar size={48} src={profilePicture !== '' ? profilePicture : undefined} icon={<UserOutlined />} />
+                {/* <Avatar alt="Remy Sharp" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Prime_Minister_of_India_Narendra_Modi.jpg/960px-Prime_Minister_of_India_Narendra_Modi.jpg" /> */}
               </IconButton>
             </Tooltip>
             <Menu
@@ -155,7 +164,11 @@ function NavigationBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={()=>{setting==='Logout'?logOut(dispatch):handleCloseUserMenu()}}>
+                <MenuItem 
+                  key={setting}
+                  onClick={()=>{
+                    setting==='Logout'?logOut(dispatch):setting==='Profile'?navigate('/profile'):handleCloseUserMenu()
+                    }}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}

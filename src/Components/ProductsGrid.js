@@ -1,24 +1,16 @@
 import { Row, Col, Spin } from "antd";
 import CardElement from "./Card";
-import { getProducts } from '../API/products';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../Actions/productSlice";
+import { useSelector } from "react-redux";
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useProducts } from "../react-query/useProducts";
 
 export default function ProductsGrid() {
-    const dispatch = useDispatch();
-    const { loading, data: products, error } = useSelector(state => state.products);
     const searchValue = useSelector((state) => state.search.value)
-
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
+    const {isPending:isLoading, isError,data:products,  error} = useProducts();
 
     const filteredProducts = Object.values(products || {}).filter(product => product.product_name.toLowerCase().includes(searchValue.toLowerCase()))
 
-    if(loading) {
+    if(isLoading) {
         return (
             <div style={{
                 display: 'flex',
@@ -31,10 +23,10 @@ export default function ProductsGrid() {
             </div>
         )
     }
-    if(error) {
+    if(isError) {
         return (
             <div className="notfound">
-                Server Unreachable
+                {error? error : 'Server Unreachable'}
             </div>
         )
     }
